@@ -27,7 +27,7 @@ add_subdirectory(lwlog-demo)
 add_subdirectory(gtest-demo)
 
 # You can use add_subdirectory() to add your own work. 
-# Please don't remove the existing subdirectories.
+# Please don't remove the existgit aing subdirectories.
 
 
 
