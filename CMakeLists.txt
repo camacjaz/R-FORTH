@@ -39,7 +39,6 @@ add_subdirectory(WarmUp_6)
 add_subdirectory(WarmUp_7)
 add_subdirectory(WarmUp_8)
 add_subdirectory(WarmUp_9)
-add_subdirectory(WarmUp_10)
 
 
 
