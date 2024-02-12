@@ -1,27 +1,26 @@
-// token.h
-
-#ifndef TOKEN_H
-#define TOKEN_H
-
 #include <stdio.h>
+#include "token.h"
 
-// Define enum for token types
-typedef enum {
-    NUMBER,
-    OPERATOR,
-    SYMBOL,
-    WORD
-} token_type_t;
+int main() {
+    // Example input stream (replace this with your actual input source)
+    FILE *input_stream = fopen("input.txt", "r");
+    if (input_stream == NULL) {
+        fprintf(stderr, "Error: Failed to open input file.\n");
+        return 1;
+    }
 
-// Define struct for token
-typedef struct {
-    token_type_t type;
-    char *text;
-} token_t;
+    // Tokenization loop
+    token_t *token;
+    while ((token = get_next_token(input_stream)) != NULL) {
+        classify_token(token);
+        // Print token type and text
+        printf("Token Type: %d, Text: %s\n", token->type, token->text);
+        free(token->text);  // Free dynamically allocated text
+        free(token);        // Free token struct
+    }
 
-// Function declarations
-token_t *create_token(token_type_t type, char *text);
-token_t *get_next_token(FILE *input_stream);
-void classify_token(token_t *token);
+    // Close input stream
+    fclose(input_stream);
 
-#endif /* TOKEN_H */
+    return 0;
+}
