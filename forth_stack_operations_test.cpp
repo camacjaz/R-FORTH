@@ -1,97 +1,111 @@
 #include <iostream>
 #include <vector>
+#include <unordered_map>
 #include <stdexcept>
 #include <gtest/gtest.h>
 
-// Define a class for integer stack operations
 class int_stack_t {
 private:
-    std::vector<int> stack; // Using a vector to implement the stack
+    std::vector<int> stack;
+    std::unordered_map<std::string, int> variables;
+    std::unordered_map<std::string, int> constants;
+
 public:
-    // Pushes a value onto the stack
     void push(int value) {
         stack.push_back(value);
     }
 
-    // Pops a value from the stack
     int pop() {
         if (stack.empty()) {
-            throw std::out_of_range("Stack underflow"); // Throws an exception if the stack is empty
+            throw std::out_of_range("Stack underflow");
         }
-        int value = stack.back(); // Retrieves the top element
-        stack.pop_back(); // Removes the top element
+        int value = stack.back();
+        stack.pop_back();
         return value;
     }
 
-    // Returns the top value of the stack without removing it
     int top() const {
         if (stack.empty()) {
-            throw std::out_of_range("Stack is empty"); // Throws an exception if the stack is empty
+            throw std::out_of_range("Stack is empty");
         }
         return stack.back();
     }
 
-    // Checks if the stack is empty
     bool empty() const {
         return stack.empty();
     }
 
-    // Returns the size of the stack
     size_t size() const {
         return stack.size();
     }
 
-    // Additional FORTH stack operations
-
-    // Duplicates the top element of the stack
-    void dup() {
-        if (stack.empty()) {
-            throw std::out_of_range("Stack underflow"); // Throws an exception if the stack is empty
-        }
-        push(top()); // Pushes a copy of the top element onto the stack
+    // Define a variable with a given name and value
+    void define_variable(const std::string& name, int value) {
+        variables[name] = value;
     }
 
-    // Swaps the top two elements of the stack
+    // Define a constant with a given name and value
+    void define_constant(const std::string& name, int value) {
+        constants[name] = value;
+    }
+
+    // Retrieve the value of a variable or constant by name
+    int get_value(const std::string& name) const {
+        if (variables.find(name) != variables.end()) {
+            return variables.at(name);
+        } else if (constants.find(name) != constants.end()) {
+            return constants.at(name);
+        } else {
+            throw std::out_of_range("Variable or constant not found");
+        }
+    }
+
+    // Stack manipulation operations
+
+    void dup() {
+        if (stack.empty()) {
+            throw std::out_of_range("Stack underflow");
+        }
+        push(top());
+    }
+
     void swap() {
         if (stack.size() < 2) {
-            throw std::out_of_range("Insufficient elements for swap"); // Throws an exception if there are not enough elements on the stack
+            throw std::out_of_range("Insufficient elements for swap");
         }
         int a = pop();
         int b = pop();
-        push(a); // Pushes the previously popped elements in reverse order
+        push(a);
         push(b);
     }
 
-    // Copies the second element from the top and pushes it onto the stack
     void over() {
         if (stack.size() < 2) {
-            throw std::out_of_range("Insufficient elements for over"); // Throws an exception if there are not enough elements on the stack
+            throw std::out_of_range("Insufficient elements for over");
         }
         int a = pop();
         int b = top();
-        push(a); // Pushes the previously popped element back onto the stack
+        push(a);
         push(b);
     }
 
-    // Rotates the top three elements of the stack
     void rot() {
         if (stack.size() < 3) {
-            throw std::out_of_range("Insufficient elements for rotation"); // Throws an exception if there are not enough elements on the stack
+            throw std::out_of_range("Insufficient elements for rotation");
         }
         int a = pop();
         int b = pop();
         int c = pop();
-        push(b); // Reorders the popped elements and pushes them back onto the stack
+        push(b);
         push(a);
         push(c);
     }
 
-    // Drops the top element of the stack
     void drop() {
         if (stack.empty()) {
-            throw std::out_of_range("Stack underflow"); // Throws an exception if the stack is empty
+            throw std::out_of_range("Stack underflow");
         }
-        stack.pop_back(); // Removes the top element from the stack
+        stack.pop_back();
     }
 
     // Testing helper function to clear the stack
@@ -122,3 +136,4 @@ int main(int argc, char **argv) {
     testing::InitGoogleTest(&argc, argv);
     return RUN_ALL_TESTS();
 }
+
